@@ -1,0 +1,796 @@
+'scopeName': 'source.jaeger'
+'fileTypes': [
+	'jg'
+]
+'firstLineMatch': '^#!.*\\bjaeger\\b'
+'name': 'Jaeger'
+'repository':
+	'hex':
+		'patterns': [
+			{
+				# hex (integer) number
+				'match': '0x[a-fA-F0-9]+'
+				'name': 'constant.numeric.jaeger'
+			}
+		]
+	'integer':
+		'patterns': [
+			{
+				# integer number
+				'match': '-?[0-9]+'
+				'name': 'constant.numeric.jaeger'
+			}
+		]
+	'float':
+		'patterns': [
+			{
+				# float number
+				'match': '-?[0-9]+(\\.[0-9]+)?+'
+				'name': 'constant.numeric.jaeger'
+			}
+		]
+	'string':
+		'patterns': [
+			{
+				# string
+				'match': '".*?(?=")"'
+				'name': 'string.quoted.double.jaeger'
+			}
+		]
+	'null':
+		'patterns': [
+			{
+				# null
+				'match': '\\bnull\\b'
+				'name': 'constant.other.jaeger'
+			}
+		]
+	'false':
+		'patterns': [
+			{
+				# false
+				'match': '\\bfalse\\b'
+				'name': 'constant.other.jaeger'
+			}
+		]
+	'true':
+		'patterns': [
+			{
+				# true
+				'match': '\\btrue\\b'
+				'name': 'constant.other.jaeger'
+			}
+		]
+	'variable':
+		'patterns': [
+			{
+				# variable
+				'match': '\\b([_a-zA-Z][_a-zA-Z0-9]*)\\b(\\s*\\.\\s*)?'
+				'captures':
+					'1':
+						'name': 'variable.parameter.jaeger'
+					'2':
+						'name': 'keyword.operator.jaeger'
+			}
+		]
+	'field':
+		'patterns': [
+			{
+				# field
+				'match': '(\\<)\\s*([_a-zA-Z][_a-zA-Z0-9]*)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s*(\\>)'
+				'captures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'variable.parameter.jaeger'
+					'3':
+						'name': 'storage.type.jaeger'
+					'4':
+						'name': 'keyword.operator.jaeger'
+			}
+		]
+	'block_comment':
+		'patterns': [
+			{
+				# block comment
+				'begin': '###'
+				'end': '###'
+				'name': 'comment.block.jaeger'
+			}
+		]
+	'line_comment':
+		'patterns': [
+			{
+				# line comment
+				'match': '#.*\\n'
+				'name': 'comment.line.double-slash.jaeger'
+			}
+		]
+	'code_injection':
+		'patterns': [
+			{
+				#code injection
+				'begin': '~~'
+				'beginCaptures':
+					'0':
+						'name': 'string.quoted.double.jaeger'
+				'end': '~~'
+				'endCaptures':
+					'0':
+						'name': 'string.quoted.double.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': 'source.intuicio4'
+					}
+				]
+			}
+		]
+	'directive_strict':
+		'patterns': [
+			{
+				# directive: strict
+				'match': '(\\/)\\s*(strict)\\s*(\\/)'
+				'captures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'keyword.control.directive.jaeger'
+			}
+		]
+	'directive_import':
+		'patterns': [
+			{
+				# directive: use
+				'begin': '(\\/)\\s*(import)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#string'
+					}
+				]
+			}
+		]
+	'directive_jaegerify':
+		'patterns': [
+			{
+				# directive: jaegerify
+				'begin': '(\\/)\\s*(jaegerify)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\s+(from)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s*(\\/)'
+				'endCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'storage.type.jaeger'
+					'3':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+					{
+						'match': '\\s+(as)\\s+'
+						'name': 'keyword.control.directive.jaeger'
+					}
+					{
+						'include': '#function_definition'
+					}
+				]
+			}
+		]
+	'directive_marshal':
+		'patterns': [
+			{
+				# directive: marshal (assembly -> jaeger)
+				'begin': '(\\/)\\s*(marshal)\\s+(from)\\s+(".*?(?=")")\\s+(to)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+(with)\\s*'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'keyword.control.directive.jaeger'
+					'4':
+						'name': 'string.quoted.double.jaeger'
+					'5':
+						'name': 'keyword.control.directive.jaeger'
+					'6':
+						'name': 'storage.type.jaeger'
+					'7':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+				]
+			}
+			{
+				# directive: marshal (jaeger -> assembly)
+				'begin': '(\\/)\\s*(marshal)\\s+(from)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+(to)\\s+(".*?(?=")")\\s+(with)\\s*'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'keyword.control.directive.jaeger'
+					'4':
+						'name': 'storage.type.jaeger'
+					'5':
+						'name': 'keyword.control.directive.jaeger'
+					'6':
+						'name': 'string.quoted.double.jaeger'
+					'7':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+				]
+			}
+		]
+	'directive_start':
+		'patterns': [
+			{
+				# directive: start
+				'match': '(\\/)\\s*(start)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s*(\\/)'
+				'captures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'entity.name.function.jaeger'
+					'4':
+						'name': 'keyword.control.directive.jaeger'
+			}
+		]
+	'directive_asm':
+		'patterns': [
+			{
+				# directive: asm
+				'begin': '(\\/)\\s*(asm)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\s*(\\/)'
+				'endCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+				]
+			}
+		]
+	'directive_return':
+		'patterns': [
+			{
+				# directive: return
+				'match': '(\\/)\\s*(return\\s+placement)\\s*\\/'
+				'captures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'keyword.control.directive.jaeger'
+			}
+		]
+	'directive_let':
+		'patterns': [
+			{
+				# directive: let
+				'begin': '(\\/)\\s*(let)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+					{
+						'include': '#field'
+					}
+				]
+			}
+		]
+	'directive_set':
+		'patterns': [
+			{
+				# directive: set
+				'begin': '(\\/)\\s*(set)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'storage.variable.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+				]
+			}
+		]
+	'directive_if':
+		'patterns': [
+			{
+				# directive: if
+				'begin': '(\\/)\\s*(if)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#body'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+					{
+						'match': '\\s+(then)\\s+'
+						'name': 'keyword.control.directive.jaeger'
+					}
+					{
+						'match': '\\s+(elif)\\s+'
+						'name': 'keyword.control.directive.jaeger'
+					}
+					{
+						'match': '\\s+(else)\\s+'
+						'name': 'keyword.control.directive.jaeger'
+					}
+				]
+			}
+		]
+	'directive_while':
+		'patterns': [
+			{
+				# directive: while
+				'begin': '(\\/)\\s*(while)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#body'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+					{
+						'match': '\\s+(then)\\s+'
+						'name': 'keyword.control.directive.jaeger'
+					}
+				]
+			}
+		]
+	'structure':
+		'patterns': [
+			{
+				# structure
+				'begin': '(\\{)\\s*([_a-zA-Z][_a-zA-Z0-9]*)\\b'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'storage.type.jaeger'
+				'end': '\\}'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#code_injection'
+					}
+					{
+						'include': '#field'
+					}
+				]
+			}
+		]
+	'function_definition':
+		'patterns': [
+			{
+				# function definition
+				'begin': '(\\[)\\s*([_a-zA-Z][_a-zA-Z0-9]*)(\\s+([_a-zA-Z][_a-zA-Z0-9]*))?\\b'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'entity.name.function.jaeger'
+					'4':
+						'name': 'storage.type.jaeger'
+				'end': '\\]'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#directive_let'
+					}
+					{
+						'include': '#directive_asm'
+					}
+					{
+						'include': '#directive_return'
+					}
+					{
+						'include': '#directive_set'
+					}
+					{
+						'include': '#directive_if'
+					}
+					{
+						'include': '#directive_while'
+					}
+					{
+						'include': '#field'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+				]
+			}
+		]
+	'function_call':
+		'patterns': [
+			{
+				# function call
+				'begin': '(\\()\\s*([_a-zA-Z][_a-zA-Z0-9]*)\\b'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'entity.name.function.jaeger'
+				'end': '\\)'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+					{
+						'match': '\\s+\\&\\s+'
+						'name': 'keyword.operator.jaeger'
+					}
+					{
+						'include': '#function_call'
+					}
+				]
+			}
+		]
+	'body':
+		'patterns': [
+			{
+				# body
+				'begin': '\\['
+				'beginCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'end': '\\]'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#directive_asm'
+					}
+					{
+						'include': '#directive_set'
+					}
+					{
+						'include': '#directive_if'
+					}
+					{
+						'include': '#directive_while'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#false'
+					}
+					{
+						'include': '#true'
+					}
+					{
+						'include': '#variable'
+					}
+					{
+						'include': '#hex'
+					}
+					{
+						'include': '#integer'
+					}
+					{
+						'include': '#float'
+					}
+					{
+						'include': '#string'
+					}
+				]
+			}
+		]
+'patterns': [
+	{
+		'include': '#block_comment'
+	}
+	{
+		'include': '#line_comment'
+	}
+	{
+		'include': '#directive_import'
+	}
+	{
+		'include': '#directive_jaegerify'
+	}
+	{
+		'include': '#directive_marshal'
+	}
+	{
+		'include': '#directive_start'
+	}
+	{
+		'include': '#directive_strict'
+	}
+	{
+		'include': '#structure'
+	}
+	{
+		'include': '#function_definition'
+	}
+]

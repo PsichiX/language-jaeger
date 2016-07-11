@@ -1,0 +1,12 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Jaeger'
+      'submenu': [
+        { 'label': 'Run', 'command': 'jaeger:run' },
+        { 'label': 'Info', 'command': 'jaeger:info' }
+      ]
+    ]
+  }
+]

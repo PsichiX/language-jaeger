@@ -1,0 +1,5 @@
+# Stronger bindings
+'atom-text-editor':
+  #'f4': 'jaeger:check-syntax'
+  'f5': 'jaeger:run'
+  #'f6': 'jaeger:compile'
