@@ -818,6 +818,62 @@
 				]
 			}
 		]
+	'template':
+		'patterns': [
+			{
+				# template
+				'begin': '(\\[\\<)\\s*(template)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\b'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'keyword.control.template.jaeger'
+					'3':
+						'name': 'storage.type.jaeger'
+				'end': '\\>\\]'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'name': 'string.quoted.double.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
+			}
+		]
+	'implement':
+		'patterns': [
+			{
+				# implement
+				'begin': '(\\[\\<)\\s*(implement)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\b'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.operator.jaeger'
+					'2':
+						'name': 'keyword.control.template.jaeger'
+					'3':
+						'name': 'storage.type.jaeger'
+					'4':
+						'name': 'storage.type.jaeger'
+				'end': '\\>\\]'
+				'endCaptures':
+					'0':
+						'name': 'keyword.operator.jaeger'
+				'name': 'string.quoted.double.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
+			}
+		]
 'patterns': [
 	{
 		'include': '#block_comment'
@@ -845,5 +901,11 @@
 	}
 	{
 		'include': '#function_definition'
+	}
+	{
+		'include': '#template'
+	}
+	{
+		'include': '#implement'
 	}
 ]
