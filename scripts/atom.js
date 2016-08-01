@@ -29,7 +29,7 @@ function Jaeger() {
 			title: 'Check syntax command',
 			description: 'Command triggered on syntax check',
 			type: 'string',
-			default: 'jaeger ${FILE_PATH} -sd ${FILE_DIR}'
+			default: 'jaeger ${FILE_PATH} -cs'
 		},*/
 		commandRunScript: {
 			title: 'Run script command',
@@ -104,7 +104,26 @@ Jaeger.prototype.promiseCheckBinaries = function(){
 						});
 						reject();
 					}else{
-						accept();
+						if(!atom.packages.resolvePackagePath('language-intuicio4')){
+							atom.notifications.addError('Atom package for Intuicio 4 language is not installed!', {
+								detail: 'Please install atom package: language-intuicio4\nthen restart Atom.',
+								dismissable: true
+							});
+							reject();
+						}else if(!atom.packages.isPackageActive('language-intuicio4')){
+							atom.notifications.addError('Atom package for Intuicio 4 language is not active!', {
+								detail: 'Please activate atom package: language-intuicio4\nthen restart Atom.',
+								dismissable: true
+							});
+							reject();
+						}else if(!atom.packages.isPackageLoaded('language-intuicio4')){
+							atom.notifications.addError('Atom package for Intuicio 4 language is not loaded!', {
+								dismissable: true
+							});
+							reject();
+						}else{
+							accept();
+						}
 					}
 				}else{
 					reject();
@@ -172,25 +191,26 @@ Jaeger.prototype.promiseRunScript = function(filePath){
 					FILE_DIR: dir
 				}
 			),
-			runScriptsInTerminalWindow = atom.config.get(
-				'language-jaeger.runScriptsInTerminalWindow'
-			),
-			platform = process.platform;
+			platform = process.platform,
+			wrappedCmd;
 
-		child_process.exec(cmd, {
+		if(platform === 'win32'){
+			wrappedCmd = 'start cmd /k \"' + cmd + ' & pause & exit\"';
+		}else{
+			wrappedCmd = cmd;
+		}
+
+		child_process.exec(wrappedCmd, {
 			cwd: dir
 		}, function(error, stdout, stderr){
 			if(error){
-				atom.notifications.addError('Running: ' + filePath, {
+				atom.notifications.addError('Failed run of: ' + filePath, {
 					detail: stdout,
 					dismissable: true
 				});
 				reject();
 			}else{
-				atom.notifications.addSuccess('Running: ' + filePath, {
-					detail: stdout,
-					dismissable: true
-				});
+				atom.notifications.addSuccess('Successful run of: ' + filePath);
 				accept();
 			}
 		});
