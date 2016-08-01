@@ -545,6 +545,56 @@
 				]
 			}
 		]
+	'directive_yield':
+		'patterns': [
+			{
+				'include': '#directive_yield_value'
+			}
+			{
+				'include': '#directive_yield_void'
+			}
+		]
+	'directive_yield_value':
+		'patterns': [
+			{
+				# directive: yield value
+				'begin': '(\\/)\\s*(yield)\\s+'
+				'beginCaptures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+				'end': '\\/'
+				'endCaptures':
+					'0':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+					{
+						'include': '#function_call'
+					}
+					{
+						'include': '#null'
+					}
+					{
+						'include': '#variable'
+					}
+				]
+			}
+		]
+	'directive_yield_void':
+		'patterns': [
+			{
+				# directive: yield void
+				'match': '(\\/)\\s*(yield)\\s*\\/'
+				'name': 'keyword.control.directive.jaeger'
+			}
+		]
 	'structure':
 		'patterns': [
 			{
@@ -734,6 +784,9 @@
 					}
 					{
 						'include': '#directive_while'
+					}
+					{
+						'include': '#directive_yield'
 					}
 					{
 						'include': '#function_call'
