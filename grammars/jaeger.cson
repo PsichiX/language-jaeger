@@ -11,6 +11,14 @@
 				# hex (integer) number
 				'match': '0x[a-fA-F0-9]+'
 				'name': 'constant.numeric.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'integer':
@@ -19,6 +27,14 @@
 				# integer number
 				'match': '-?[0-9]+'
 				'name': 'constant.numeric.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'float':
@@ -27,6 +43,14 @@
 				# float number
 				'match': '-?[0-9]+(\\.[0-9]+)?+'
 				'name': 'constant.numeric.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'string':
@@ -35,6 +59,14 @@
 				# string
 				'match': '".*?(?=")"'
 				'name': 'string.quoted.double.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'null':
@@ -43,6 +75,14 @@
 				# null
 				'match': '\\bnull\\b'
 				'name': 'constant.other.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'false':
@@ -51,6 +91,14 @@
 				# false
 				'match': '\\bfalse\\b'
 				'name': 'constant.other.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'true':
@@ -59,6 +107,14 @@
 				# true
 				'match': '\\btrue\\b'
 				'name': 'constant.other.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'variable':
@@ -71,6 +127,14 @@
 						'name': 'variable.parameter.jaeger'
 					'2':
 						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'field':
@@ -87,6 +151,14 @@
 						'name': 'storage.type.jaeger'
 					'4':
 						'name': 'keyword.operator.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'block_comment':
@@ -143,6 +215,14 @@
 						'name': 'keyword.control.directive.jaeger'
 					'3':
 						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'directive_import':
@@ -295,6 +375,14 @@
 						'name': 'entity.name.function.jaeger'
 					'4':
 						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'directive_asm':
@@ -336,6 +424,14 @@
 						'name': 'keyword.control.directive.jaeger'
 					'3':
 						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'directive_let':
@@ -593,6 +689,14 @@
 				# directive: yield void
 				'match': '(\\/)\\s*(yield)\\s*\\/'
 				'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
 			}
 		]
 	'structure':
@@ -849,21 +953,18 @@
 		'patterns': [
 			{
 				# implement
-				'begin': '(\\[\\<)\\s*(implement)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\b'
-				'beginCaptures':
+				'match': '(\\[\\<)\\s*(implement)\\s+([_a-zA-Z][_a-zA-Z0-9]*)((\\s+[_a-zA-Z][_a-zA-Z0-9]*)+)\\b(\\>\\])'
+				'captures':
 					'1':
 						'name': 'keyword.operator.jaeger'
 					'2':
-						'name': 'keyword.control.template.jaeger'
+						'name': 'keyword.control.implement.jaeger'
 					'3':
 						'name': 'storage.type.jaeger'
 					'4':
 						'name': 'storage.type.jaeger'
-				'end': '\\>\\]'
-				'endCaptures':
-					'0':
+					'6':
 						'name': 'keyword.operator.jaeger'
-				'name': 'string.quoted.double.jaeger'
 				'patterns': [
 					{
 						'include': '#block_comment'
