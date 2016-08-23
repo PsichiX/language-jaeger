@@ -385,6 +385,30 @@
 				]
 			}
 		]
+	'directive_attribute':
+		'patterns': [
+			{
+				# directive: attribute
+				'match': '(\\/)\\s*(attribute)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s*(\\/)'
+				'captures':
+					'1':
+						'name': 'keyword.control.directive.jaeger'
+					'2':
+						'name': 'keyword.control.directive.jaeger'
+					'3':
+						'name': 'string.quoted.double.jaeger'
+					'4':
+						'name': 'keyword.control.directive.jaeger'
+				'patterns': [
+					{
+						'include': '#block_comment'
+					}
+					{
+						'include': '#line_comment'
+					}
+				]
+			}
+		]
 	'directive_asm':
 		'patterns': [
 			{
@@ -468,7 +492,7 @@
 		'patterns': [
 			{
 				# directive: set
-				'begin': '(\\/)\\s*(set)\\s+([_a-zA-Z][_a-zA-Z0-9]*)\\s+'
+				'begin': '(\\/)\\s*(set)\\s+'
 				'beginCaptures':
 					'1':
 						'name': 'keyword.control.directive.jaeger'
@@ -996,6 +1020,12 @@
 	}
 	{
 		'include': '#directive_strict'
+	}
+	{
+		'include': '#directive_asm'
+	}
+	{
+		'include': '#directive_attribute'
 	}
 	{
 		'include': '#structure'
